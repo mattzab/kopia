@@ -28,4 +28,7 @@ const (
 	headerDeflateDefault         HeaderID = 0x1500
 	headerDeflateBestSpeed       HeaderID = 0x1501
 	headerDeflateBestCompression HeaderID = 0x1502
+
+	headerXZDefault         HeaderID = 0x1600
+	headerXZBestCompression HeaderID = 0x1601
 )
