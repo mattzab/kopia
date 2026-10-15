@@ -1,3 +1,37 @@
+# mattzab/kopia: Kopia with Quick vs Full Maintenance
+
+> **This is a fork of [kopia/kopia](https://github.com/kopia/kopia).** The `mac-build` branch is upstream `master` plus the commits from [kopia/kopia#5381](https://github.com/kopia/kopia/pull/5381). It's rebuilt every week and released as macOS CLI binaries.
+
+## What the PR changes
+
+Kopia currently records every maintenance run as `kind=Maintenance`, so in KopiaUI you can't tell a quick run from a full one. PR [#5381](https://github.com/kopia/kopia/pull/5381) splits these into **Quick Maintenance** and **Full Maintenance**. Each run now shows its type in KopiaUI and the CLI. It's a small change of about 20 lines and nothing else behaves differently.
+
+## What this fork provides
+
+- **`mac-build` branch:** the latest upstream `master` with #5381 applied on top. When upstream gets new commits, the branch is rebuilt and checked with `go build ./...`.
+- **[Releases](https://github.com/mattzab/kopia/releases/latest):** `kopia` CLI binaries for macOS on Apple Silicon (`arm64`) and Intel (`amd64`).
+- `master` holds only the PR commits, so leave it alone.
+
+Once #5381 is merged upstream, this fork won't be needed anymore and you can go back to official Kopia releases.
+
+## Install (macOS)
+
+Paste this into Terminal. It picks the right binary for your Mac, downloads the latest release, removes the macOS quarantine flag, and replaces your current `kopia`. If you don't have `kopia` installed yet, it goes to `/usr/local/bin/kopia`.
+
+```sh
+cd "$(mktemp -d)" && ARCH=$( [ "$(uname -m)" = arm64 ] && echo arm64 || echo amd64 ) && curl -fsSL "https://github.com/mattzab/kopia/releases/latest/download/kopia-darwin-$ARCH.tar.gz" | tar xz && xattr -d com.apple.quarantine "kopia-darwin-$ARCH" 2>/dev/null; sudo mv "kopia-darwin-$ARCH" "$(command -v kopia || echo /usr/local/bin/kopia)" && kopia --version
+```
+
+**KopiaUI users:** KopiaUI uses its own bundled copy of `kopia`. To use this build there, quit KopiaUI and replace the bundled binary instead:
+
+```sh
+cd "$(mktemp -d)" && ARCH=$( [ "$(uname -m)" = arm64 ] && echo arm64 || echo amd64 ) && curl -fsSL "https://github.com/mattzab/kopia/releases/latest/download/kopia-darwin-$ARCH.tar.gz" | tar xz && xattr -d com.apple.quarantine "kopia-darwin-$ARCH" 2>/dev/null; sudo mv "kopia-darwin-$ARCH" "/Applications/KopiaUI.app/Contents/Resources/server/kopia"
+```
+
+---
+
+*The upstream Kopia README continues below.*
+
 Kopia
 =====
 
